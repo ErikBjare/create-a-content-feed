@@ -7,7 +7,11 @@ class RedditSpider(ContentSpider):
     name = 'redditspider'
     start_urls = [
         'https://www.reddit.com/r/programming/top/?sort=top&t=day',
-        # 'https://www.reddit.com/r/programming/top/?sort=top&t=week',
+        'https://www.reddit.com/r/python/top/?sort=top&t=day',
+        # You could add other subreddits:
+        #  'https://www.reddit.com/r/technology/top/?sort=top&t=day',
+        # Or include older stuff:
+        #  'https://www.reddit.com/r/programming/top/?sort=top&t=week',
     ]
 
     def parse(self, response):
@@ -28,6 +32,8 @@ class RedditSpider(ContentSpider):
             score = entry.css(".score.unvoted::text").extract_first()
             if score == "•":
                 score = None
+            elif "k" in score:
+                score = int(float(score[:-1]) * 1000)
             else:
                 score = int(score)
 
